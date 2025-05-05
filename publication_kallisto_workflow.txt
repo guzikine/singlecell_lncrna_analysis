@@ -25,3 +25,4 @@ scRNAseq quality control, gene detection and post-processing:
 	- Dimensionality reduction was conducted using runPCA, runTSNE and runUMAP functions from scater R package.
 	- Next, clustering was performed on a generated shared nearest-neighbor (SNN) graph using the Louvain community detection algorithm to cluster the cells.
 	- These clusters were manually annotated to cell types using canonical markers (Supplementary Data 1).
+	
