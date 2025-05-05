@@ -1,0 +1,10 @@
+name: kallisto
+channels:
+  - conda-forge
+  - bioconda
+  - r
+dependencies:
+  - kallisto
+  - seqtk
+  - samtools
+  - bedtools

@@ -1,0 +1,4 @@
+data/
+.*.R.RDS
+.*.Rmd.RDS
+config.yml

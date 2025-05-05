@@ -1,0 +1,32 @@
+name: r
+channels:
+  - conda-forge
+  - bioconda
+  - r
+dependencies:
+  - r-base
+  - r-bookdown
+  - r-broom
+  - r-cowplot
+  - r-data.table
+  - r-devtools
+  - r-doparallel
+  - r-dplyr
+  - r-dt
+  - r-foreach
+  - r-ggplot2
+  - r-ggpubr
+  - r-ggrepel
+  - r-git2r
+  - r-glue
+  - r-kableextra
+  - r-knitr
+  - r-logr
+  - r-pacman
+  - r-plotly
+  - r-png
+  - r-remotes
+  - r-stringr
+  - r-tibble
+  - r-tidyverse
+  - r-openxlsx

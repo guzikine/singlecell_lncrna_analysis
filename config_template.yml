@@ -1,0 +1,19 @@
+#
+# Configuration file for the Kallisto scRNAseq pipeline.
+#
+
+# Kallisto configuration.
+species:
+technology_type:
+bootstrap:
+
+# Metadata configuration.
+metadata_url: 
+metadata_file: 
+
+# Read file transfer via SCP configuration.
+# Needs to have SSH config and SSH keys setup.
+scp_address:
+scp_reads_location:
+
+

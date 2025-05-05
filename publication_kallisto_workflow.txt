@@ -1,0 +1,27 @@
+Use a workflow with default user defined parameters - Kallisto-Bustools, made for scRNAseq data.
+
+In the lncRNA paper, the authors used the following versions:
+	- Cell Ranger count was run in version 3.0.1
+	- STAR in version 2.7.9
+	- Kallisto in version 0.46.1
+	- Bustools in version 0.40.0
+	- Salmon in version 1.4.0
+
+Human genome version: hg38 (v37), Kallisto was indexed against the transcriptome.
+
+All the scripts for indexing and preprocessing -> https://github.com/ML4BM-Lab/manuscript_scRNAseq_lncRNAs
+
+scRNAseq quality control, gene detection and post-processing:
+	- Specically, emptydrops was applied to distinguish empty droplets from cells in each dataset processed with Kallisto.
+	- Potential doublets were then identifed and removed with scDblFinder.
+	- Finally, cells with high mitochondrial content and an abnormally high number of counts were also filtered.
+	- Next, poorly expressed genes were also filtered by applying a gradient of thresholds on the expression. The different thresholds applied retained those genes with more than 
+		1) 250 counts and present in more than 25 cells
+		2) 100 counts and present in more than 10 cells
+		3) 50 counts and present in more than 5 cells
+		4) 25 counts and present in more than 3 cells
+	- These thresholds were also applied in the characterization of the genes exclusively identified by Kallisto compared to genes commonly found ones.
+	- After the quality control was completed, normalization was performed using logNormCounts function from scuttle R package.
+	- Dimensionality reduction was conducted using runPCA, runTSNE and runUMAP functions from scater R package.
+	- Next, clustering was performed on a generated shared nearest-neighbor (SNN) graph using the Louvain community detection algorithm to cluster the cells.
+	- These clusters were manually annotated to cell types using canonical markers (Supplementary Data 1).
