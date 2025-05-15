@@ -8,3 +8,7 @@ dependencies:
   - seqtk
   - samtools
   - bedtools
+  - fastqc
+  - multiqc
+  - fastp
+  - fastq-screen

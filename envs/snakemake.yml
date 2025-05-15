@@ -4,4 +4,10 @@ channels:
   - bioconda
   - r
 dependencies:
-  - kallisto
+  - snakemake
+  - r-base
+  - r-yaml
+  - r-stringr
+  - r-data.table
+  - r-tidyverse
+  - yq

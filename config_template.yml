@@ -16,4 +16,6 @@ metadata_file:
 scp_address:
 scp_reads_location:
 
+# Fastp parameters.
+fastp_parameters:
 

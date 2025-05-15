@@ -1,22 +1,23 @@
 #
-# Setup metadata and folder files.
-# 
-R --script src/metadata.R
-touch folder.csv
-echo "ID" >> folder.csv
-
+# Setup metadata file.
 #
-# Get and format metadata.
-#
-rule get_metadata:
-    output:
-        metadata_file = config["metadata_file"]
-    params:
-        metadata_url = config["metadata_url"]
-    conda: "envs/r.yml"
-    script: "metadata.R"
+metadata_file=$(yq ".metadata_file" config.yml)
+if [ -f "$metadata_file" ]; then
+    Rscript src/metadata.R
+fi
+mkdir -p $(yq ".cell_dirs" config.yml | dirname)
+echo "ID" > $(yq ".cell_dirs" config.yml)
 
 #
 # Run snakemake.
 #
-snakemake -c1 --threads all 
+# SNAKEMAKE_JOBS=${JOBS:=1}
+# SNAKEMAKE_CORES=${CORES:=1}
+
+# snakemake \
+#     --use-conda \
+#     --conda-frontend mamba \
+#     --rerun-triggers mtime \
+#     --cores $SNAKEMAKE_CORES \
+#     --jobs $SNAKEMAKE_JOBS \
+#     $1

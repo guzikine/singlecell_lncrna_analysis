@@ -1,0 +1,42 @@
+top_modules:
+  # - fastq_screen:
+  #     name: "FastQ Screen"
+  #     info: "FastQ Screen results with the raw data."
+  #     path_filters:
+  #       - ""
+  - fastqc:
+      name: "Raw FastQC"
+      anchor: "fastqc_raw"
+      info: "FastQC results for the raw data."
+      path_filters:
+        - "*raw*_fastqc.zip"
+  - fastqc:
+      name: "Fastp FastQC"
+      anchor: "fastqc_fastp"
+      info: "FastQC for the fastp processed data."
+      path_filters:
+        - "*fastp*_fastqc.zip"
+  - kallisto:
+      name: "Kallisto"
+      anchor: "kallisto"
+      info: "Kallisto pseudoalignment results."
+      path_filters:
+        - "*_kallisto.log"
+  - samtools/stats:
+      name: "Samtools Stats"
+      anchor: "samtools"
+      info: " Samtools alignment results."
+      path_filters:
+        - "*_stats.txt"
+        - "*_flagstat.txt"
+
+#
+# Report order configuration.
+#
+report_section_order:
+  fastqc_raw:
+    before: fastqc_fastp
+  kallisto:
+    after: fastqc_fastp
+  samtools:
+    after: kallisto
