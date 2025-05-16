@@ -1,5 +1,9 @@
+.snakemake/
 data/
-.*.R.RDS
+logs/
+
 .*.Rmd.RDS
-config.yml
 .DS_Store
+.*.R.RDS
+
+config.yml

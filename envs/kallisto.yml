@@ -11,4 +11,5 @@ dependencies:
   - fastqc
   - multiqc
   - fastp
-  - fastq-screen
+  #- fastq-screen
+  - bowtie2

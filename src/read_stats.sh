@@ -10,10 +10,11 @@ fi
 INPUT_FASTQ=$1
 
 # Calculate the average read length
-AVG_READ_LENGTH=$(gzip -dc $INPUT_FASTQ | awk '{if(NR%4==2) print length($0)}' | awk '{s+=$1} END {print s/NR}')
+AVG_READ_LENGTH=$(gzip -dc "$INPUT_FASTQ" | awk '{if(NR%4==2) print length($0)}' | awk '{s+=$1} END {print s/NR}')
+AVG_READ_LENGTH=$(echo "$AVG_READ_LENGTH" | sed 's/,/./')
 
 # Calculate the standard deviation of read lengths
-READ_SD=$(gzip -dc $INPUT_FASTQ | awk '{if(NR%4==2) lengths[NR/4] = length($0)} END { 
+READ_SD=$(gzip -dc "$INPUT_FASTQ" | awk '{if(NR%4==2) lengths[NR/4] = length($0)} END { 
     # Calculate mean
     for (i in lengths) sum += lengths[i];
     mean = sum / length(lengths);
@@ -25,6 +26,7 @@ READ_SD=$(gzip -dc $INPUT_FASTQ | awk '{if(NR%4==2) lengths[NR/4] = length($0)} 
     print sqrt(sum_sq / length(lengths))
 }')
 
+READ_SD=$(echo "$READ_SD" | sed 's/,/./')
 READ_SD=$(echo "$READ_SD + 0.1" | bc)
 
 # Output the results
