@@ -21,7 +21,6 @@ dependencies:
   - r-glue
   - r-kableextra
   - r-knitr
-  - r-logr
   - r-pacman
   - r-plotly
   - r-png
@@ -30,3 +29,4 @@ dependencies:
   - r-tibble
   - r-tidyverse
   - r-openxlsx
+  - r-seurat

@@ -22,4 +22,4 @@ snakemake \
     --rerun-triggers mtime \
     --cores $SNAKEMAKE_CORES \
     --jobs $SNAKEMAKE_JOBS \
-    $1
+    $@

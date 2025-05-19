@@ -1,0 +1,52 @@
+---
+title: "Feature Count by Biotype Violin Plot"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+snakemake <- readRDS("../.snakemake_render.R.RDS")
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+library(Seurat)
+library(dplyr)
+library(ggplot2)
+library(Matrix)
+
+# Load data.
+print(snakemake@input$count_matrix)
+data <- readRDS(paste0("../", snakemake@input$count_matrix))
+seurat_obj <- data$seurat_obj
+annotations <- data$annotations
+```
+
+```{r, include = FALSE}
+count_matrix <- GetAssayData(seurat_obj, slot = "counts")
+
+annotations <- annotations %>%
+  filter(transcript_name %in% rownames(count_matrix))
+features_by_biotype <- split(annotations$transcript_name, annotations$biotype)
+
+feature_counts_per_biotype <- lapply(names(features_by_biotype), function(biotype) {
+  features <- features_by_biotype[[biotype]]
+  counts_sub <- count_matrix[features, , drop = FALSE]
+  detected_counts <- Matrix::colSums(counts_sub > 0)
+  data.frame(cell = colnames(counts_sub),
+             biotype = biotype,
+             n_features = detected_counts)
+})
+
+feature_counts_df <- do.call(rbind, feature_counts_per_biotype)
+
+
+plot <- ggplot(feature_counts_df, aes(x = biotype, y = n_features, fill = biotype)) +
+  geom_boxplot() +
+  theme_minimal() +
+  labs(x = "Biotype", y = "Number of Features per Cell") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position = "top")
+```
+
+```{r, include = TRUE, fig.height = 8, fig.width = 10}
+print(plot)
+```
+
+**Figure**: Feature counts by biotype boxplot in `r sample_id` sample.

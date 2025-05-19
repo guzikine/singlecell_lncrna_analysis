@@ -5,14 +5,17 @@ import pandas as pd
 
 configfile: "config.yml"
 
+# Read sample IDs from sample sheet.
 samples = pd.read_table(config["metadata_file"], sep=",")
 
+# Reference genomes.
 reference_url = (
     "https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_37/gencode.v37.transcripts.fa.gz"
     if config["species"] == "human"
     else "https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M36/gencode.vM36.transcripts.fa.gz"
 )
 
+# Wildcard constraints.
 wildcard_constraints:
     sample="[^/]+"
 
@@ -100,7 +103,7 @@ rule move_reads:
 
 
 #
-# Run fastq quality control.
+# Run fastqc quality control.
 #
 rule fastqc:
     input:
@@ -140,7 +143,7 @@ rule fastq_screen:
 
 
 #
-# Run fastp for trimming and filtering the reads.
+# Run fastp for read trimming and filtering.
 #
 rule fastp_se:
     input:
@@ -251,15 +254,39 @@ rule multiqc:
 
 
 #
+# Generate count matrix and alignemnt metadata.
+#
+def get_cell_ids(wildcards):
+    checkpoint_output = checkpoints.transfer_reads.get(sample = wildcards.sample).output.reads
+    cell_ids = os.listdir(os.path.join(checkpoint_output, f"rnaseq/mmu/{wildcards.sample}/rawdata/"))
+    
+    return cell_ids
+
+rule generate_count_matrix:
+    input:
+        abundance_tsv = expand("data/quant/{{sample}}/{cell_id}/abundance.tsv",
+                               cell_id = get_cell_ids)
+    output:
+        count_matrix = "data/quant/{sample}/count_matrix.RDS"
+    conda: "envs/r.yml"
+    script: "src/generate_count_matrix.R"
+
+
+
+#
 # Generate a report from the kallisto quant workflow.
 #
-# rule generate_report:
-#     input:
-#         multiqc = "data/reports/{sample}/multiqc_report.html"
-#     output:
-#         report = "data/reports/{sample}.html"
-#     conda: "envs/kallisto.yml"
-#     script: "generate_report.R"
+rule quality_control_report:
+    input:
+        count_matrix = "data/quant/{sample}/count_matrix.RDS"
+    output:
+        report = "data/reports/quality_control_{sample}.html"
+    conda: "envs/r.yml"
+    params:
+        report = "reports/quality_control_report.Rmd"
+    script: "src/render.R"
+
+
 
 #
 # Final rule to generate all of the files.
